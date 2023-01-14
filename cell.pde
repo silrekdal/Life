@@ -1,12 +1,11 @@
-
-
 class Cell {
   private float cx, cy;
   private boolean isAlive;
+  private int liveNeighbours; //number of live neighbors
   int cellColumn;
   int cellRow;
   int age;
-  int liveNeighbours; //number of alive neighbors
+  
   PImage flower = d00;
 
   Cell (int column, int row) {
@@ -20,9 +19,9 @@ class Cell {
       cy = (1+1.5*row)*cellEdgeLength;
     }
     liveNeighbours = 0;
-    isAlive = (random(1) < 0.200);
-    age = 0;
-  }//end definition
+    isAlive = (random(1) < 0.700);
+    age = alive();
+  }//end constructor
 
   boolean evenRow() {
     return (cellRow %2 ==0);
@@ -34,19 +33,14 @@ class Cell {
 
     else
       return 0;
-  } //end of function
+  } //end alive
 
   void updateLife() {
-    if (liveNeighbours > 3) {//if1
-      isAlive = false;
-    }//end if1
-    if (liveNeighbours == 3) {//if2
-      isAlive = true;
-    }//endif2
-    if (liveNeighbours < 2) {//if3
-      isAlive = false;
-    }//endif3
-    isAlive = (liveNeighbours == 3);
+    
+    
+    
+    isAlive = ((liveNeighbours == 3) || (liveNeighbours == 2 && isAlive));
+    
     if (isAlive)
     {
       age++;
@@ -54,7 +48,7 @@ class Cell {
     {
       age = 0;
     }
-  }
+  } // end updateLife
 
   // to cehck if cell is on bottom row and can have neighbours below
   boolean hasNeighboursBelow() {
@@ -66,23 +60,22 @@ class Cell {
   }
 
   boolean hasNeighboursRight() {
-    return (cellColumn < horisontalCellCount-1);
+    return (cellColumn < globalColCount-1);
   }
 
   boolean hasNeighboursAbove() {
-    return (cellRow < verticalCellCount -1);
+    return (cellRow < globalRowCount -1);
   }
 
-
-  void updateImage() {
+  private void updateImage() {
     if (isAlive) {
       updateImageAlive();
     } else {
       updateImageDead();
     }
-  }
+  } // end updateImage
 
-  void updateImageDead() {
+  private void updateImageDead() {
     //if1
     switch (liveNeighbours) {
     case 0:
@@ -97,32 +90,34 @@ class Cell {
       flower = d05;
     case 6:
       flower = d06;
+    default:
+      flower = deadDefault;
     }
-  }
+  } // updateImageDead
 
-
-
-  void updateImageAlive() {
-
-    if (age >= 0 && age < 5) {//if2
+  private void updateImageAlive() {
+    int stage = age / 2 + 1;
+    flower = aliveDefault;
+    switch( stage ){
+     case 1:
       if (liveNeighbours == 2) {//if3
         flower = d12;
       } else if (liveNeighbours == 3) {
         flower = d13;
-      }//end if3
-    } else if (age >= 5 && age < 10) {//if4
+      }
+    case 2:
       if (liveNeighbours == 2) {
         flower = d22;
       } else if (liveNeighbours == 3) {
         flower = d23;
-      }//end if4
-    } else if (age >= 10 && age < 15) {//if5
+      }
+     case 3:
       if (liveNeighbours == 2) {
         flower = d32;
       } else if (liveNeighbours == 3) {
         flower = d33;
-      }//end if5
-    } else if (age >= 15) {//if6
+      }
+     case 4:
       if (liveNeighbours == 2) {
         flower = d42;
       } else if (liveNeighbours == 3) {
@@ -131,14 +126,10 @@ class Cell {
     }
   }
 
-
   void show () {
+    updateImage();
     imageMode(CENTER);
-    if (isAlive) {
-      image(d01, cx, cy);
-      d01.resize (singleCellWidth, 0);
-    } else {
-      image(d00, cx, cy);
-      d00.resize (singleCellWidth, 0);
-    } //end if/else
-  }//end function
+    flower.resize(singleCellWidth, 0 );
+    image( flower, cx, cy );
+  }//end function 
+}

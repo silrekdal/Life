@@ -1,61 +1,64 @@
 class Generation {
 
+  int generationNumber = 0;
+
   void showPopulation() {
-    for (int j = 0; j < verticalCellCount; j++) {
-      for (int i = 0; i < horisontalCellCount; i++) {
-        if (j%2 == 0) { //even rows stay the same, odd rows are shifted to the right (thin creates the "beehive" pattern)
-          Population[i][j].show();
-        } else {
-          if (i<horisontalCellCount-1) { //so that there aren't half hexagons on the right side
-            Population[i][j].show();
-          }//end if
-        }//end else
+    for (int row = 0; row < globalRowCount; row++) {
+      for (int col = 0; col < globalColCount; col++) {
+        Population[col][row].show();
       }//end for2
     }//end for1
-  }//end showC
+  }//end show
 
   private void countLivingNeighbours(Cell c) { // c = current cell
 
     c.liveNeighbours = 0;
-    //for all
-    if (c.hasNeighboursBelow())//if cell is not bottom cell
-    { //
+
+    // Check direct neighbors
+
+    if (c.hasNeighboursBelow())
+    {
       c.liveNeighbours += Population[c.cellColumn][c.cellRow-1].alive();
     }
-
-    if (c.hasNeighboursLeft()) { //left
+    if (c.hasNeighboursLeft()) {
       c.liveNeighbours += Population[c.cellColumn-1][c.cellRow].alive();
     }
-    if (c.hasNeighboursRight()) { //bottom
+    if (c.hasNeighboursRight()) {
       c.liveNeighbours += Population[c.cellColumn+1][c.cellRow].alive();
     }
-    if (c.hasNeighboursAbove()) {//right
+    if (c.hasNeighboursAbove()) {
       c.liveNeighbours += Population[c.cellColumn][c.cellRow+1].alive();
     }
+
+    // Check oblique neighbors
+
     if (c.evenRow()) {
-      if (c.hasNeighboursLeft() && c.hasNeighboursBelow()) {//if1: top left
-        c.liveNeighbours += Population[c.cellColumn-1][c.cellRow+1].alive();
-      } //end if1
-      if (c.hasNeighboursLeft() && c.hasNeighboursAbove()) {//if2: bottom left
+      if (c.hasNeighboursLeft() && c.hasNeighboursBelow()) {
         c.liveNeighbours += Population[c.cellColumn-1][c.cellRow-1].alive();
-      }//end if2
+      }
+      if (c.hasNeighboursLeft() && c.hasNeighboursAbove()) {
+        c.liveNeighbours += Population[c.cellColumn-1][c.cellRow+1].alive();
+      }
     } else {
-      if (c.hasNeighboursRight() && c.hasNeighboursBelow()) {//if1: top right
-        c.liveNeighbours += Population[c.cellColumn+1][c.cellRow+1].alive();
-      }//end if1
-      if (c.hasNeighboursRight() && c.hasNeighboursAbove()) {//if2: bottom right
+      if (c.hasNeighboursRight() && c.hasNeighboursBelow()) {
         c.liveNeighbours += Population[c.cellColumn+1][c.cellRow-1].alive();
-      }//end if2
-    }//end else
-  }//end count
+      }//end if1
+      if (c.hasNeighboursRight() && c.hasNeighboursAbove()) {
+        c.liveNeighbours += Population[c.cellColumn+1][c.cellRow+1].alive();
+      }
+    }
+  }
 
   void refreshLifeStatus() {
-    for (int y = 0; y < verticalCellCount; y++) {//for1
-      for (int x = 0; x < horisontalCellCount; x++) {
+    for (int y = 0; y < globalRowCount; y++) {//for1
+      for (int x = 0; x < globalColCount; x++) {
         countLivingNeighbours(Population[x][y]);
-        Population[x][y].updateLife();
+        if (generationNumber>0) {
+          Population[x][y].updateLife();
+        }
         Population[x][y].updateImage();
-      }//end for2
-    }//end for1
-  }
-}
+      }
+    };
+    generationNumber++;
+  } // end refresh
+} // end class
