@@ -1,11 +1,12 @@
-int Nx = 10;
+int horisontalCellCount = 10; //Number for cells horisontally 
 //Nx = 10;
-int d;
-float s;
-int Ny;
+int singleCellWidth;
+float cellEdgeLength;
+int verticalCellCount;
 Cell [][] Population; //create a matrix that holds the position data of the whole population
 int cellBuffer [][];
 int cells [][];
+int genCount = 0;
 PImage daisy[][] = new PImage [5][7]; //create an array that will contain all of the possible life stages of each "house"
 /*
  0 = dead
@@ -16,29 +17,29 @@ PImage daisy[][] = new PImage [5][7]; //create an array that will contain all of
  */
 PImage d00, d01, d02, d03, d04, d05, d06, d12, d13, d22, d23, d32, d33, d42, d43;
 Generation gen;
-String t = "Generation:" + g;
+String t = "The Big Bang has not yet happened... Press spacebar to enter the world"; //kanskje add big bang?
 
 
 void setup() {
   size (800, 600); //canvas size
-  d = round(width/Nx);
-  println (d);
-  s = d/sqrt(3);
-  println (s);
-  Ny = int(((height/s-2)/1.5) + 1);
-  println (Ny);
-  Population = new Cell [Nx][Ny];
+  singleCellWidth = round(width/horisontalCellCount);
+  println ("The width of each cell is:  " + singleCellWidth);
+  cellEdgeLength = singleCellWidth/sqrt(3);
+  println ("The length of a cell edge is: " +cellEdgeLength);
+  verticalCellCount = int(((height/cellEdgeLength-2)/1.5) + 1);
+  println ("Number of cell rows: " + verticalCellCount);
+  Population = new Cell [horisontalCellCount][verticalCellCount];
   gen = new Generation();
   //fill in population matrix with position data
-  for (int y = 0; y < Ny; y++) {
-    for (int x = 0; x < Nx; x++) {
-      if (y%2 == 0) { //even rows stay the same, odd rows are shifted to the right (thin creates the "beehive" pattern)
-        Population [x][y] = new Cell (((x+0.5)*d), ((1+1.5*y)*s));
-      } else {
-        Population [x][y] = new Cell (((x+1)*d), ((1+1.5*y)*s));
-      } //end else
-    }//end for1
-  }//end for2
+  for (int currentRow = 0; currentRow < verticalCellCount; currentRow++) {
+    for (int currentColumn = 0; currentColumn < horisontalCellCount; currentColumn++) {
+    
+       Population [currentColumn][currentRow] = new Cell (currentColumn,currentRow);
+    }
+  }
+  
+       
+    
   //load all images to create different modes
   d00 = loadImage("00.png");
   d01 = loadImage("01.png");
@@ -62,10 +63,14 @@ void draw() {
   gen.showPopulation();
   fill(255);
   textSize(12);
-  text (t, Nx+20, Ny-20);
+  text (t, horisontalCellCount+20, verticalCellCount-20);
 }
 
-void keyPressed() {
-  gen.updateLifeStatus();
-  gen.incrementAge()
+
+void keyPressed() { //create new generation
+  gen.refreshLifeStatus();
+  gen.incrementAge();
+  genCount = genCount++;
+  t = "Generation:" + genCount;
+  
 }
