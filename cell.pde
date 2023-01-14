@@ -1,23 +1,23 @@
 
 
-class cell {
+class Cell {
   float x, y;
-  int alive;
+  boolean isAlive;
   int age;
-  int ne; //number of alive neighbors
+  int liveNeighbours; //number of alive neighbors
   PImage flower = d00;
 
-  cell (float xpos, float ypos) {
+  Cell (float xpos, float ypos) {
     x = xpos;
     y = ypos;
-    ne = 0;
-    alive = round(random(1));
+    liveNeighbours = 0;
+    isAlive = (random(1) >= 0.500);
     age = 0;
   }//end definition
 
   void show () {
     imageMode(CENTER);
-    if (alive == 0) {
+    if (isAlive == 0) {
       image(d01, x, y);
       d01.resize (d, 0);
     } else {
