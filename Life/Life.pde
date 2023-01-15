@@ -1,9 +1,9 @@
-static final int PERCENT_LIVE_AT_STARTUP = 70;  // Percentage of initial live cells //<>// //<>// //<>//
-static final int GLOBAL_COL_COUNT = 10; //Number of cells horizontally
+static final int PERCENT_LIVE_AT_STARTUP = 50;  // Percentage of initial live cells //<>// //<>// //<>//
+static final int GLOBAL_COL_COUNT = 16; //Number of cells horizontally
 static final int GENERATIONS_PER_STAGE = 3; // Number of generations per stage
 static final int STAGE_COUNT = 4;
-static final int MIN_NEIGHBOURS = 2;
-static final int MAX_NEIGHBOURS = 3;
+static final int MIN_NEIGHBOURS = 1;
+static final int MAX_NEIGHBOURS = 4;
 static final int MAX_AGE = GENERATIONS_PER_STAGE * STAGE_COUNT;
 
 boolean keyWasReleased = true;
@@ -35,7 +35,7 @@ void restartLife()
 
 void setup() {
 
-  size (800, 600); //canvas size
+  size (1600, 1200); //canvas size
 
   PFont font;
    font = loadFont( "ScalaSans-Caps-32.vlw" );
