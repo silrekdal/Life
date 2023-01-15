@@ -36,44 +36,44 @@ class ImageSelector { //<>//
     }
   } // end updateImage
 
-  private void updateImageAlive( Cell c, int aLiveNeighbours ) {
+  private void updateImageAlive( Cell c, int liveNeighbours ) {
     int lifeStage = (c.age / GENERATIONS_PER_STAGE );
     lifeStage  = lifeStage %4 + 1;
-    println( "LIVE @ XY(", c.cellColumn, ",", c.cellRow, ") Age: ", c.age, " Stage: ", lifeStage, "Live neighbours: ", aLiveNeighbours );
+    println( "LIVE @ XY(", c.cellColumn, ",", c.cellRow, ") Age: ", c.age, " Stage: ", lifeStage, "Live neighbours: ", liveNeighbours );
     switch( lifeStage ) {
     case 1:
       {
 
-        if (aLiveNeighbours == 2) {
+        if (liveNeighbours == 2) {
           c.flower = d12;
-        } else if (aLiveNeighbours == 3) {
+        } else if (liveNeighbours == 3) {
           c.flower = d13;
         }
         break;
       }
     case 2:
       {
-        if (aLiveNeighbours == 2) {
+        if (liveNeighbours == 2) {
           c.flower = d22;
-        } else if (aLiveNeighbours == 3) {
+        } else if (liveNeighbours == 3) {
           c.flower = d23;
         }
         break;
       }
     case 3:
       {
-        if (aLiveNeighbours == 2) {
+        if (liveNeighbours == 2) {
           c.flower = d32;
-        } else if (aLiveNeighbours == 3) {
+        } else if (liveNeighbours == 3) {
           c.flower = d33;
         }
         break;
       }
     case 4:
       {
-        if (aLiveNeighbours == 2) {
+        if (liveNeighbours == 2) {
           c.flower = d42;
-        } else if (aLiveNeighbours == 3) {
+        } else if (liveNeighbours == 3) {
           c.flower = d43;
         }
         break;
@@ -84,9 +84,9 @@ class ImageSelector { //<>//
     }
   } // end function
 
-  private void updateImageDead(Cell c, int aLiveNeighbours ) {
-    println( "DEAD @ XY(", c.cellColumn, ",", c.cellRow, ") Live neighbours: ", aLiveNeighbours );
-    switch (aLiveNeighbours) {
+  private void updateImageDead(Cell c, int liveNeighbours ) {
+    println( "DEAD @ XY(", c.cellColumn, ",", c.cellRow, ") Live neighbours: ", liveNeighbours );
+    switch (liveNeighbours) {
     case 0:
       c.flower = d00;
       break;

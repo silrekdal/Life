@@ -1,6 +1,8 @@
-static final int PERCENT_LIVE_AT_STARTUP = 60;  // Percentage of initial live cells //<>// //<>//
-static final int GLOBAL_COL_COUNT = 12; //Number of cells horizontally
+static final int PERCENT_LIVE_AT_STARTUP = 70;  // Percentage of initial live cells //<>// //<>//
+static final int GLOBAL_COL_COUNT = 6; //Number of cells horizontally
 static final int GENERATIONS_PER_STAGE = 4; // Number of generations per stage
+
+Cell[][] cells;
 
 Generation globalGeneration; // A Generation of cells
 
@@ -21,8 +23,8 @@ void setup() {
   globalRowCount = int(((height/cellEdgeLength-2)/1.5) + 1);
   println ("Number of cell rows: " + globalRowCount);
 
-  Cell [][]cells = new Cell [GLOBAL_COL_COUNT][globalRowCount];
-  globalGeneration = new Generation( cells );
+  cells = new Cell [GLOBAL_COL_COUNT][globalRowCount];
+  globalGeneration = new Generation(); //constructor injection, sends as a parameter the other objects needed 
   globalImageSelector = new ImageSelector();
   
   //fill in population matrix with position data
@@ -32,9 +34,8 @@ void setup() {
     }
   }
 
-  globalGeneration.updateAllLivingNeighbourCounts();
-  // The first time we just accept life/death status without updating based on neighbours
-  globalGeneration.updateAllImages();
+  globalGeneration.firstGeneration();
+
   
 }//end function
 

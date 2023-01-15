@@ -93,8 +93,8 @@ class Cell { //<>//
     catch(Exception e) {
       text( e.getMessage(), cx, cy-12);
     };
-
-    // fill( 255, 0, 0);
-    // text( " Live: " + isAlive + " (" + cellRow + ","  + cellColumn + ") N: " + liveNeighbours, cx-singleCellWidth / 3, cy );
+      textSize(13);
+     fill( 255, 0, 0);
+     text( " Live: " + isAlive + " (" + cellRow + ","  + cellColumn + ") N: " + liveNeighbours, cx-cellWidth/2-10, cy );
   } //end function
 }
