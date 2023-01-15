@@ -1,4 +1,4 @@
-class Cell { //<>//
+class Cell { //<>// //<>//
 
   // Public fields
 
@@ -7,10 +7,10 @@ class Cell { //<>//
 
   // Private fields
 
+  private FlowerImage img;
   private float cx, cy;
   private boolean isAlive;
   private int age = 0;
-  private PImage flower = new PImage();
   private int liveNeighbours = 0;
 
   // Cell constructor
@@ -28,11 +28,11 @@ class Cell { //<>//
     isAlive = (random(100) < PERCENT_LIVE_AT_STARTUP );
     if ( isAlive ) {
       age = 1;
-      flower = globalImageSelector.aliveDefault;
+      img = globalImageSelector.aliveDefault;
     } else
     {
       age = 0;
-      flower = globalImageSelector.deadDefault;
+      img = globalImageSelector.deadDefault;
     }
   }//end Cell constructor
 
@@ -42,12 +42,12 @@ class Cell { //<>//
     return (cellRow %2 == 0);
   }
 
-  void updateLife() {
-    isAlive = ((liveNeighbours == 3) || ( (liveNeighbours == 2) && isAlive ));
+  void updateLife() {  
+    isAlive = ((liveNeighbours == 3) || ( ( liveNeighbours >= MIN_NEIGHBOURS ) && ( liveNeighbours <=MAX_NEIGHBOURS  ) && isAlive ) );
     if (isAlive)
     {
       age++;
-      if (age == MAX_AGE){
+      if (age > MAX_AGE){
         age = 0;
         isAlive = false;
       }
@@ -84,22 +84,24 @@ class Cell { //<>//
     return (cellRow > 0 );
   }
 
-  void setLiveNeighbours( int aLiveNeighbours ) {
-    liveNeighbours = aLiveNeighbours;
+  void setLiveNeighbours( int liveNeighbours ) {
+    this.liveNeighbours = liveNeighbours;
+    globalImageSelector.updateImage( this );
   }
 
   void show () { 
     
     imageMode(CENTER);
     try {
-      flower.resize(cellWidth, 0 );
-      image( flower, cx, cy );
+      img.Image.resize(cellWidth, 0 );
+      image( img.Image, cx, cy );
     }
     catch(Exception e) {
       text( e.getMessage(), cx, cy-12);
     };
       textSize(12);
      fill( 0);
-     text( " Live: " + isAlive + " N: " + liveNeighbours + " Age: " + age, cx-cellWidth/2+10, cy  );
+     text( " LI: " + isAlive + " LN: " + liveNeighbours + " AGE: " + age, cx-cellWidth/2+10, cy  );
+     text( " Filename: " + img.fileName, cx-cellWidth/2+10, cy+12  );
   } //end function
 }

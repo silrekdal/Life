@@ -66,25 +66,15 @@ class Generation {
     };
   } // countAllLivingNeighbours
 
-  private void updateAllImages() {
-    for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
-      for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
-        Cell c = cells[colNo][rowNo];
-        globalImageSelector.updateImage( c, countLivingNeighbours( c ) );
-      }
-    };
-  } // end updateAllImages
-
-  void newGeneration() {
-    updateAllLivingNeighbourCounts();  // Find living neighbours to decide fate
+  public void newGeneration() {
     refreshLifeStatus(); //New life status is updated
-    updateAllLivingNeighbourCounts(); //Counts amount of neighbours to decide new image 
-    updateAllImages(); //Updates image based of amount of living neighbours in CURRENT generation
+    updateAllLivingNeighbourCounts(); //Find number of living neighbours to decide new image ( and fate in the next ) 
     generationNumber++;
   }
 
-  void firstGeneration() {
+  public void firstGeneration() {
+    generationNumber = 0;
     updateAllLivingNeighbourCounts();
-    updateAllImages();
   }
+  
 } // end class
