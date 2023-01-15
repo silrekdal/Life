@@ -35,11 +35,11 @@ void restartLife()
 
 void setup() {
 
-  size (1200, 800); //canvas size
+  size (800, 600); //canvas size
 
   PFont font;
-  font = loadFont( "ScalaSans-Caps-32.vlw" );
-  // textFont(font, 20 );
+   font = loadFont( "ScalaSans-Caps-32.vlw" );
+  textFont(font, 20 );
 
   cellWidth = round(width/(GLOBAL_COL_COUNT+0.5));
   println ("The width of each cell is:  " + cellWidth);

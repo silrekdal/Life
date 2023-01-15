@@ -105,6 +105,6 @@ class Cell { //<>// //<>//
       text( " Filename: " + img.fileName, cx-cellWidth/2+10, cy+12  );
     }
     textSize( 24 );
-    text( liveNeighbours, cx-6, cy-cellWidth/3 );
+    text( liveNeighbours, cx-6, cy-cellWidth/2 + 20 );
   } //end function show
 }
