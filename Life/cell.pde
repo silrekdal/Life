@@ -8,7 +8,7 @@ class Cell { //<>//
   // Private fields
 
   private float cx, cy;
-  private boolean isAlive = false;
+  private boolean isAlive;
   private int age = 0;
   private PImage flower = new PImage();
   private int liveNeighbours = 0;
@@ -46,7 +46,11 @@ class Cell { //<>//
     isAlive = ((liveNeighbours == 3) || ( (liveNeighbours == 2) && isAlive ));
     if (isAlive)
     {
-      age = age + 1;
+      age++;
+      if (age == MAX_AGE){
+        age = 0;
+        isAlive = false;
+      }
     } else
     {
       age = 0;
@@ -84,7 +88,8 @@ class Cell { //<>//
     liveNeighbours = aLiveNeighbours;
   }
 
-  void show () {
+  void show () { 
+    
     imageMode(CENTER);
     try {
       flower.resize(cellWidth, 0 );
@@ -93,8 +98,8 @@ class Cell { //<>//
     catch(Exception e) {
       text( e.getMessage(), cx, cy-12);
     };
-      textSize(13);
-     fill( 255, 0, 0);
-     text( " Live: " + isAlive + " (" + cellRow + ","  + cellColumn + ") N: " + liveNeighbours, cx-cellWidth/2-10, cy );
+      textSize(12);
+     fill( 0);
+     text( " Live: " + isAlive + " N: " + liveNeighbours + " Age: " + age, cx-cellWidth/2+10, cy  );
   } //end function
 }

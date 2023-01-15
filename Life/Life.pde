@@ -1,6 +1,8 @@
 static final int PERCENT_LIVE_AT_STARTUP = 70;  // Percentage of initial live cells //<>// //<>//
 static final int GLOBAL_COL_COUNT = 6; //Number of cells horizontally
-static final int GENERATIONS_PER_STAGE = 4; // Number of generations per stage
+static final int GENERATIONS_PER_STAGE = 2; // Number of generations per stage
+static final int MAX_AGE = 10; 
+
 
 Cell[][] cells;
 

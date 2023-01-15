@@ -1,7 +1,7 @@
 class ImageSelector { //<>//
 
   private PImage d00, d01, d02, d04, d05, d06, d12, d13, d22, d23, d32, d33, d42, d43;
-  private PImage deadDefault, aliveDefault;
+  private PImage deadDefault, aliveDefault,emptyHexagon;
 
   public ImageSelector() {
 
@@ -25,6 +25,7 @@ class ImageSelector { //<>//
 
     deadDefault = loadImage("dead.png");
     aliveDefault = loadImage("alive.png");
+    emptyHexagon = loadImage("empty.png");
     
   } // End of constructor
 
@@ -34,11 +35,11 @@ class ImageSelector { //<>//
     } else {
       updateImageDead( c, liveNeighbours );
     }
+    c.flower = emptyHexagon;
   } // end updateImage
 
   private void updateImageAlive( Cell c, int liveNeighbours ) {
-    int lifeStage = (c.age / GENERATIONS_PER_STAGE );
-    lifeStage  = lifeStage %4 + 1;
+    int lifeStage = ((c.age-1) / GENERATIONS_PER_STAGE)+1;
     println( "LIVE @ XY(", c.cellColumn, ",", c.cellRow, ") Age: ", c.age, " Stage: ", lifeStage, "Live neighbours: ", liveNeighbours );
     switch( lifeStage ) {
     case 1:
