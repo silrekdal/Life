@@ -1,16 +1,22 @@
-class GenerationClass {
+class Generation {
+  
+  public Generation( Cell[][] aCells ){
+    _cells = aCells;
+  }
 
+  private Cell[][] _cells;
+  
   public int generationNumber = 0;
 
   public void showPopulation() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
-        cells[colNo][rowNo].show();
+        _cells[colNo][rowNo].show();
       }//end for2
     }//end for1
   }//end show
 
-  private int countLivingNeighbours(CellMatrix c) { // c = current cell
+  private int countLivingNeighbours(Cell c) { // c = current cell
 
     int liveNeighbours = 0;
 
@@ -18,33 +24,33 @@ class GenerationClass {
 
     if (c.hasNeighboursBelow())
     {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn][c.cellRow+1].isAlive );
+      liveNeighbours += c.addNeighbour( _cells[c.cellColumn][c.cellRow+1].isAlive );
     }
     if (c.hasNeighboursLeft()) {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn-1][c.cellRow].isAlive );
+      liveNeighbours += c.addNeighbour( _cells[c.cellColumn-1][c.cellRow].isAlive );
     }
     if (c.hasNeighboursRight()) {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn+1][c.cellRow].isAlive );
+      liveNeighbours += c.addNeighbour( _cells[c.cellColumn+1][c.cellRow].isAlive );
     }
     if (c.hasNeighboursAbove()) {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn][c.cellRow-1].isAlive );
+      liveNeighbours += c.addNeighbour( _cells[c.cellColumn][c.cellRow-1].isAlive );
     }
 
     // Check oblique neighbors
 
     if (c.evenRow()) {
       if (c.hasNeighboursLeft() && c.hasNeighboursBelow()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn-1][c.cellRow+1].isAlive );
+        liveNeighbours += c.addNeighbour( _cells[c.cellColumn-1][c.cellRow+1].isAlive );
       }
       if (c.hasNeighboursLeft() && c.hasNeighboursAbove()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn-1][c.cellRow-1].isAlive );
+        liveNeighbours += c.addNeighbour( _cells[c.cellColumn-1][c.cellRow-1].isAlive );
       }
     } else {
       if (c.hasNeighboursRight() && c.hasNeighboursBelow()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn+1][c.cellRow+1].isAlive );
+        liveNeighbours += c.addNeighbour( _cells[c.cellColumn+1][c.cellRow+1].isAlive );
       }
       if (c.hasNeighboursRight() && c.hasNeighboursAbove()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn+1][c.cellRow-1].isAlive );
+        liveNeighbours += c.addNeighbour( _cells[c.cellColumn+1][c.cellRow-1].isAlive );
       }
     }
     return liveNeighbours;
@@ -53,7 +59,7 @@ class GenerationClass {
   private void refreshLifeStatus() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
-        cells[colNo][rowNo].updateLife();
+        _cells[colNo][rowNo].updateLife();
       }
     };
   } // end refreshLifeStatus
@@ -61,7 +67,7 @@ class GenerationClass {
  public void updateAllLivingNeighbourCounts() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
-        cells[colNo][rowNo].setLiveNeighbours( countLivingNeighbours(cells[colNo][rowNo]) );
+        _cells[colNo][rowNo].setLiveNeighbours( countLivingNeighbours(_cells[colNo][rowNo]) );
       }
     };
   } // countAllLivingNeighbours
@@ -69,8 +75,8 @@ class GenerationClass {
   void updateAllImages() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
-        CellMatrix c = cells[colNo][rowNo];
-        imgSelector.updateImage( c, countLivingNeighbours( c ) );
+        Cell c = _cells[colNo][rowNo];
+        globalImageSelector.updateImage( c, countLivingNeighbours( c ) );
       }
     };
   } // end updateAllImages

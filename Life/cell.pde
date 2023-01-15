@@ -1,4 +1,4 @@
-class CellMatrix { //<>//
+class Cell { //<>//
 
   // Public fields
 
@@ -15,27 +15,25 @@ class CellMatrix { //<>//
 
   // Cell constructor
 
-  CellMatrix (int column, int row) {
+  Cell (int column, int row) {
     cellColumn = column;
     cellRow = row;
     if (evenRow()) { //even rows stay the same, odd rows are shifted to the right (this creates the "beehive" pattern)
-      cx = (column+0.5)*singleCellWidth;
+      cx = (column+0.5)*cellWidth;
       cy = (1+1.5*row)*cellEdgeLength;
     } else {
-      cx = (column+1)*singleCellWidth;
+      cx = (column+1)*cellWidth;
       cy = (1+1.5*row)*cellEdgeLength;
     }
     isAlive = (random(100) < PERCENT_LIVE_AT_STARTUP );
     if ( isAlive ) {
       age = 1;
-      flower = imgSelector.aliveDefault;
-    }
-    else
+      flower = globalImageSelector.aliveDefault;
+    } else
     {
       age = 0;
-      flower = imgSelector.deadDefault;
+      flower = globalImageSelector.deadDefault;
     }
-    
   }//end Cell constructor
 
   // Public methods
@@ -89,15 +87,14 @@ class CellMatrix { //<>//
   void show () {
     imageMode(CENTER);
     try {
-
-      flower.resize(singleCellWidth, 0 );
+      flower.resize(cellWidth, 0 );
       image( flower, cx, cy );
     }
     catch(Exception e) {
-      text( e.getMessage(), cx,cy-12);
+      text( e.getMessage(), cx, cy-12);
     };
 
     // fill( 255, 0, 0);
     // text( " Live: " + isAlive + " (" + cellRow + ","  + cellColumn + ") N: " + liveNeighbours, cx-singleCellWidth / 3, cy );
-  }//end function
+  } //end function
 }

@@ -1,7 +1,7 @@
 class ImageSelector { //<>//
 
   private PImage d00, d01, d02, d04, d05, d06, d12, d13, d22, d23, d32, d33, d42, d43;
-  public PImage deadDefault, aliveDefault;
+  private PImage deadDefault, aliveDefault;
 
   public ImageSelector() {
 
@@ -21,12 +21,14 @@ class ImageSelector { //<>//
     d42 = loadImage("42.png");
     d43 = loadImage("43.png");
 
-    deadDefault = loadImage("dead.PNG");
-    aliveDefault = loadImage("alive.PNG");
+    // We don't have images for all combinations of neighbours and life status, use defaults for those
+
+    deadDefault = loadImage("dead.png");
+    aliveDefault = loadImage("alive.png");
     
   } // End of constructor
 
-  public void updateImage(CellMatrix c, int liveNeighbours) {
+  public void updateImage(Cell c, int liveNeighbours) {
     if (c.isAlive) {
       updateImageAlive( c, liveNeighbours );
     } else {
@@ -34,8 +36,8 @@ class ImageSelector { //<>//
     }
   } // end updateImage
 
-  private void updateImageAlive( CellMatrix c, int aLiveNeighbours ) {
-    int lifeStage = (c.age / 5);
+  private void updateImageAlive( Cell c, int aLiveNeighbours ) {
+    int lifeStage = (c.age / GENERATIONS_PER_STAGE );
     lifeStage  = lifeStage %4 + 1;
     println( "LIVE @ XY(", c.cellColumn, ",", c.cellRow, ") Age: ", c.age, " Stage: ", lifeStage, "Live neighbours: ", aLiveNeighbours );
     switch( lifeStage ) {
@@ -82,7 +84,7 @@ class ImageSelector { //<>//
     }
   } // end function
 
-  private void updateImageDead(CellMatrix c, int aLiveNeighbours ) {
+  private void updateImageDead(Cell c, int aLiveNeighbours ) {
     println( "DEAD @ XY(", c.cellColumn, ",", c.cellRow, ") Live neighbours: ", aLiveNeighbours );
     switch (aLiveNeighbours) {
     case 0:
