@@ -2,7 +2,18 @@ class Generation {
 
   public int generationNumber = 0;
 
-  public void showPopulation() {
+
+  private int boolToInt( boolean aliveNeighbour )
+  {
+    if ( aliveNeighbour) {
+      return 1;
+    } else
+    {
+      return 0;
+    }
+  }
+
+  public void showAll() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
         cells[colNo][rowNo].show();
@@ -10,7 +21,7 @@ class Generation {
     }//end for1
   }//end show
 
-  private int countLivingNeighbours(Cell c) { // c = current cell
+  private int countLivingNeighboursForOneCell(Cell c) { 
 
     int liveNeighbours = 0;
 
@@ -18,63 +29,63 @@ class Generation {
 
     if (c.hasNeighboursBelow())
     {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn][c.cellRow+1].isAlive );
+      liveNeighbours += boolToInt( cells[c.cellColumn][c.cellRow+1].isAlive );
     }
     if (c.hasNeighboursLeft()) {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn-1][c.cellRow].isAlive );
+      liveNeighbours += boolToInt( cells[c.cellColumn-1][c.cellRow].isAlive );
     }
     if (c.hasNeighboursRight()) {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn+1][c.cellRow].isAlive );
+      liveNeighbours += boolToInt( cells[c.cellColumn+1][c.cellRow].isAlive );
     }
     if (c.hasNeighboursAbove()) {
-      liveNeighbours += c.addNeighbour( cells[c.cellColumn][c.cellRow-1].isAlive );
+      liveNeighbours += boolToInt( cells[c.cellColumn][c.cellRow-1].isAlive );
     }
 
     // Check oblique neighbors
 
     if (c.evenRow()) {
       if (c.hasNeighboursLeft() && c.hasNeighboursBelow()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn-1][c.cellRow+1].isAlive );
+        liveNeighbours += boolToInt( cells[c.cellColumn-1][c.cellRow+1].isAlive );
       }
       if (c.hasNeighboursLeft() && c.hasNeighboursAbove()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn-1][c.cellRow-1].isAlive );
+        liveNeighbours += boolToInt( cells[c.cellColumn-1][c.cellRow-1].isAlive );
       }
     } else {
       if (c.hasNeighboursRight() && c.hasNeighboursBelow()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn+1][c.cellRow+1].isAlive );
+        liveNeighbours += boolToInt( cells[c.cellColumn+1][c.cellRow+1].isAlive );
       }
       if (c.hasNeighboursRight() && c.hasNeighboursAbove()) {
-        liveNeighbours += c.addNeighbour( cells[c.cellColumn+1][c.cellRow-1].isAlive );
+        liveNeighbours += boolToInt( cells[c.cellColumn+1][c.cellRow-1].isAlive );
       }
     }
     return liveNeighbours;
   }
 
-  private void refreshLifeStatus() {
+  private void updateLifeStatusForAll() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
         cells[colNo][rowNo].updateLife();
       }
     };
-  } // end refreshLifeStatus
+  } // end updateLifeStatusForAll
 
-  private void updateAllLivingNeighbourCounts() {
+  private void updateLivingNeighbourCountForAll() {
     for (int rowNo = 0; rowNo < globalRowCount; rowNo++) {
       for (int colNo = 0; colNo < GLOBAL_COL_COUNT; colNo++) {
-        cells[colNo][rowNo].setLiveNeighbours( countLivingNeighbours(cells[colNo][rowNo]) );
+        cells[colNo][rowNo].updateLiveNeigbours( countLivingNeighboursForOneCell(cells[colNo][rowNo]) );
       }
     };
-  } // countAllLivingNeighbours
+  } // updateLivingNeighbourCountForAll
 
-  public void newGeneration() {
-    refreshLifeStatus(); //New life status is updated
-    updateAllLivingNeighbourCounts(); //Find number of living neighbours to decide new image ( and fate in the next ) 
+  public void growNewGeneration() {
     generationNumber++;
+    updateLifeStatusForAll(); //New life status is updated
+    updateLivingNeighbourCountForAll(); //Find number of living neighbours to decide new image ( and fate in the next ) 
   }
 
-  public void firstGeneration() {
+  public void plantFirstGeneration() {
     generationNumber = 0;
-    updateAllLivingNeighbourCounts();
+    updateLivingNeighbourCountForAll();
   }
   
 } // end class

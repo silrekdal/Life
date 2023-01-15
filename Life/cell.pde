@@ -28,12 +28,11 @@ class Cell { //<>// //<>//
     isAlive = (random(100) < PERCENT_LIVE_AT_STARTUP );
     if ( isAlive ) {
       age = 1;
-      img = globalImageSelector.aliveDefault;
     } else
     {
       age = 0;
-      img = globalImageSelector.deadDefault;
     }
+    img = globalImageSelector.defaultImage(isAlive);
   }//end Cell constructor
 
   // Public methods
@@ -42,12 +41,13 @@ class Cell { //<>// //<>//
     return (cellRow %2 == 0);
   }
 
-  void updateLife() {  
+  void updateLife() {
+    boolean wasAlive = isAlive;
     isAlive = ((liveNeighbours == 3) || ( ( liveNeighbours >= MIN_NEIGHBOURS ) && ( liveNeighbours <=MAX_NEIGHBOURS  ) && isAlive ) );
     if (isAlive)
     {
       age++;
-      if (age > MAX_AGE){
+      if (age > MAX_AGE) {
         age = 0;
         isAlive = false;
       }
@@ -55,17 +55,8 @@ class Cell { //<>// //<>//
     {
       age = 0;
     }
+    if ( wasAlive != isAlive ) reloadImage();
   } // end updateLife
-
-  int addNeighbour( boolean aliveNeighbour )
-  {
-    if ( aliveNeighbour) {
-      return 1;
-    } else
-    {
-      return 0;
-    }
-  }
 
   // to cehck if cell is on bottom row and can have neighbours below
   boolean hasNeighboursBelow() {
@@ -84,24 +75,36 @@ class Cell { //<>// //<>//
     return (cellRow > 0 );
   }
 
-  void setLiveNeighbours( int liveNeighbours ) {
-    this.liveNeighbours = liveNeighbours;
+  void reloadImage() {
     globalImageSelector.updateImage( this );
+    img.pngImage.resize(cellWidth, 0 );
   }
 
-  void show () { 
-    
+  void updateLiveNeigbours( int liveNeighbours ) {
+    if ( liveNeighbours != this.liveNeighbours ) {
+      this.liveNeighbours = liveNeighbours;
+      reloadImage();
+    }
+  }
+
+  void show () {
+
     imageMode(CENTER);
     try {
-      img.Image.resize(cellWidth, 0 );
-      image( img.Image, cx, cy );
+      image( img.pngImage, cx, cy );
     }
     catch(Exception e) {
-      text( e.getMessage(), cx, cy-12);
+      println( "EXCEPTION: " + e.getMessage() );
     };
-      textSize(12);
-     fill( 0);
-     text( " LI: " + isAlive + " LN: " + liveNeighbours + " AGE: " + age, cx-cellWidth/2+10, cy  );
-     text( " Filename: " + img.fileName, cx-cellWidth/2+10, cy+12  );
-  } //end function
+
+    textSize(12);
+    fill( 0);
+    if ( showTextOnly )
+    {
+      text( " LI: " + isAlive + " LN: " + liveNeighbours + " AGE: " + age, cx-cellWidth/2+10, cy  );
+      text( " Filename: " + img.fileName, cx-cellWidth/2+10, cy+12  );
+    }
+    textSize( 24 );
+    text( liveNeighbours, cx-6, cy-cellWidth/3 );
+  } //end function show
 }

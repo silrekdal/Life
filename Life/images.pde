@@ -1,14 +1,23 @@
 class FlowerImage  //<>// //<>//
 {
   public String fileName;
-  public PImage Image;
-  public FlowerImage( String FileName ){
+  public PImage pngImage;
+  public FlowerImage( String FileName ) {
     fileName = FileName;
-    Image = loadImage( fileName );
-  }  
+    pngImage = loadImage( fileName );
+    pngImage.resize( cellWidth, 0 );
+  }
 }
 
 class ImageSelector {
+
+  public FlowerImage defaultImage( boolean alive)
+  {
+    if ( alive )
+      return aliveDefault;
+    else
+      return deadDefault;
+  }
 
   private FlowerImage d00, d01, d02, d04, d05, d06, d12, d13, d22, d23, d32, d33, d42, d43;
   private FlowerImage deadDefault, aliveDefault, emptyHexagon;
@@ -36,21 +45,25 @@ class ImageSelector {
     deadDefault = new FlowerImage("dead.png");
     aliveDefault = new FlowerImage("alive.png");
     emptyHexagon = new FlowerImage("empty.png");
+
     
   } // End of constructor
 
   public void updateImage(Cell c ) {
-    if (c.isAlive) {
+    if ( showTextOnly )
+    {
+      c.img = emptyHexagon;
+    } else if (c.isAlive) {
       updateImageAlive( c );
     } else {
       updateImageDead( c );
     }
-    // c.img = emptyHexagon;
   } // end updateImage
 
   private void updateImageAlive( Cell c ) {
     int lifeStage = ((c.age-1) / GENERATIONS_PER_STAGE)+1;
-    println( "LIVE @ XY(", c.cellColumn, ",", c.cellRow, ") Age: ", c.age, " Stage: ", lifeStage, "Live neighbours: ", c.liveNeighbours );
+    if ( consoleDebugging )
+      println( "LIVE @ XY(", c.cellColumn, ",", c.cellRow, ") Age: ", c.age, " Stage: ", lifeStage, "Live neighbours: ", c.liveNeighbours );
     switch( lifeStage ) {
     case 1:
       {
@@ -59,7 +72,8 @@ class ImageSelector {
           c.img = d12;
         } else if (c.liveNeighbours == 3) {
           c.img = d13;
-        }
+        } else
+          c.img= aliveDefault;
         break;
       }
     case 2:
@@ -68,7 +82,8 @@ class ImageSelector {
           c.img = d22;
         } else if (c.liveNeighbours == 3) {
           c.img = d23;
-        }
+        } else
+          c.img= aliveDefault;
         break;
       }
     case 3:
@@ -77,7 +92,8 @@ class ImageSelector {
           c.img = d32;
         } else if (c.liveNeighbours == 3) {
           c.img = d33;
-        }
+        } else
+          c.img= aliveDefault;
         break;
       }
     case 4:
@@ -86,7 +102,8 @@ class ImageSelector {
           c.img = d42;
         } else if (c.liveNeighbours == 3) {
           c.img = d43;
-        }
+        } else
+          c.img= aliveDefault;
         break;
       }
     default:
@@ -96,7 +113,8 @@ class ImageSelector {
   } // end function
 
   private void updateImageDead(Cell c ) {
-    println( "DEAD @ XY(", c.cellColumn, ",", c.cellRow, ") Live neighbours: ", c.liveNeighbours );
+    if ( consoleDebugging )
+      println( "DEAD @ XY(", c.cellColumn, ",", c.cellRow, ") Live neighbours: ", c.liveNeighbours );
     switch (c.liveNeighbours) {
     case 0:
       c.img = d00;
@@ -121,5 +139,4 @@ class ImageSelector {
       break;
     }
   } // updateImageDead
-  
 } // end class

@@ -5,7 +5,10 @@ static final int STAGE_COUNT = 4;
 static final int MIN_NEIGHBOURS = 2;
 static final int MAX_NEIGHBOURS = 3;
 static final int MAX_AGE = GENERATIONS_PER_STAGE * STAGE_COUNT;
-boolean keyReleased = false;
+
+boolean keyWasReleased = true;
+boolean consoleDebugging = false;
+boolean showTextOnly = false;
 
 
 Cell[][] cells;
@@ -27,12 +30,17 @@ void restartLife()
       cells [currentColumn][currentRow] = new Cell (currentColumn, currentRow);
     }
   }
-  globalGeneration.firstGeneration();
+  globalGeneration.plantFirstGeneration();
 }
 
 void setup() {
 
   size (1200, 800); //canvas size
+
+  PFont font;
+  font = loadFont( "ScalaSans-Caps-32.vlw" );
+  // textFont(font, 20 );
+
   cellWidth = round(width/(GLOBAL_COL_COUNT+0.5));
   println ("The width of each cell is:  " + cellWidth);
   cellEdgeLength = cellWidth/sqrt(3);
@@ -47,24 +55,32 @@ void setup() {
 }//end function
 
 void draw() {
-  String textFooter = "RETURN restarts life, ESC stops program.  Any other key adds a generation. Flower dies at age " + MAX_AGE + ", and there are " +GENERATIONS_PER_STAGE + " generations per stage." ;
+  String textFooter = "RETURN restarts Life, ESC exits.  Any other key adds a generation. Flower dies at age " + MAX_AGE + ", and there are " +GENERATIONS_PER_STAGE + " generations per stage." ;
   background (1, 137, 7);
-  globalGeneration.showPopulation();
+  globalGeneration.showAll();
   fill(255);
-  textSize(16);
+  textSize(18);
   if ( globalGeneration.generationNumber > 0 )
   {
     textFooter = "Generation: " + globalGeneration.generationNumber;
   }
-  text (textFooter, 20, height-8);
+  text (textFooter, 8, height-20);
 }
 
 void keyPressed()
 {
-  if ( keyReleased )
+  if ( keyWasReleased )
   {
     switch( key )
     {
+    case 'T':
+      showTextOnly = !showTextOnly;
+      globalGeneration.showAll();
+      break;
+    case 't':
+      showTextOnly = !showTextOnly;
+      globalGeneration.showAll();
+      break;
     case RETURN:
       restartLife();
       break;
@@ -72,12 +88,12 @@ void keyPressed()
       restartLife();
       break;
     default:
-      globalGeneration.newGeneration();
+      globalGeneration.growNewGeneration();
     }
   }
-  keyReleased = false;
+  keyWasReleased = false;
 }
 
-void keyReleased() { 
-  keyReleased = true;
+void keyReleased() {
+  keyWasReleased = true;
 }
