@@ -1,14 +1,21 @@
-class Cell {
-  private float cx, cy;
-  private boolean isAlive;
-  private int liveNeighbours; //number of live neighbors
-  int cellColumn;
-  int cellRow;
-  int age;
-  
-  PImage flower = d00;
+class CellMatrix { //<>//
 
-  Cell (int column, int row) {
+  // Public fields
+
+  public int cellColumn;
+  public int cellRow;
+
+  // Private fields
+
+  private float cx, cy;
+  private boolean isAlive = false;
+  private int age = 0;
+  private PImage flower = new PImage();
+  private int liveNeighbours = 0;
+
+  // Cell constructor
+
+  CellMatrix (int column, int row) {
     cellColumn = column;
     cellRow = row;
     if (evenRow()) { //even rows stay the same, odd rows are shifted to the right (this creates the "beehive" pattern)
@@ -18,41 +25,49 @@ class Cell {
       cx = (column+1)*singleCellWidth;
       cy = (1+1.5*row)*cellEdgeLength;
     }
-    liveNeighbours = 0;
-    isAlive = (random(1) < 0.700);
-    age = alive();
-  }//end constructor
+    isAlive = (random(100) < PERCENT_LIVE_AT_STARTUP );
+    if ( isAlive ) {
+      age = 1;
+      flower = imgSelector.aliveDefault;
+    }
+    else
+    {
+      age = 0;
+      flower = imgSelector.deadDefault;
+    }
+    
+  }//end Cell constructor
+
+  // Public methods
 
   boolean evenRow() {
-    return (cellRow %2 ==0);
+    return (cellRow %2 == 0);
   }
 
-  int alive() {
-    if (isAlive)
-      return 1;
-
-    else
-      return 0;
-  } //end alive
-
   void updateLife() {
-    
-    
-    
-    isAlive = ((liveNeighbours == 3) || (liveNeighbours == 2 && isAlive));
-    
+    isAlive = ((liveNeighbours == 3) || ( (liveNeighbours == 2) && isAlive ));
     if (isAlive)
     {
-      age++;
+      age = age + 1;
     } else
     {
       age = 0;
     }
   } // end updateLife
 
+  int addNeighbour( boolean aliveNeighbour )
+  {
+    if ( aliveNeighbour) {
+      return 1;
+    } else
+    {
+      return 0;
+    }
+  }
+
   // to cehck if cell is on bottom row and can have neighbours below
   boolean hasNeighboursBelow() {
-    return (cellRow > 0);
+    return (cellRow < globalRowCount-1);
   }
 
   boolean hasNeighboursLeft() {
@@ -60,76 +75,29 @@ class Cell {
   }
 
   boolean hasNeighboursRight() {
-    return (cellColumn < globalColCount-1);
+    return (cellColumn < GLOBAL_COL_COUNT-1);
   }
 
   boolean hasNeighboursAbove() {
-    return (cellRow < globalRowCount -1);
+    return (cellRow > 0 );
   }
 
-  private void updateImage() {
-    if (isAlive) {
-      updateImageAlive();
-    } else {
-      updateImageDead();
-    }
-  } // end updateImage
-
-  private void updateImageDead() {
-    //if1
-    switch (liveNeighbours) {
-    case 0:
-      flower = d00;
-    case 1:
-      flower = d01;
-    case 2:
-      flower = d02;
-    case 4:
-      flower = d04;
-    case 5:
-      flower = d05;
-    case 6:
-      flower = d06;
-    default:
-      flower = deadDefault;
-    }
-  } // updateImageDead
-
-  private void updateImageAlive() {
-    int stage = age / 2 + 1;
-    flower = aliveDefault;
-    switch( stage ){
-     case 1:
-      if (liveNeighbours == 2) {//if3
-        flower = d12;
-      } else if (liveNeighbours == 3) {
-        flower = d13;
-      }
-    case 2:
-      if (liveNeighbours == 2) {
-        flower = d22;
-      } else if (liveNeighbours == 3) {
-        flower = d23;
-      }
-     case 3:
-      if (liveNeighbours == 2) {
-        flower = d32;
-      } else if (liveNeighbours == 3) {
-        flower = d33;
-      }
-     case 4:
-      if (liveNeighbours == 2) {
-        flower = d42;
-      } else if (liveNeighbours == 3) {
-        flower = d43;
-      }
-    }
+  void setLiveNeighbours( int aLiveNeighbours ) {
+    liveNeighbours = aLiveNeighbours;
   }
 
   void show () {
-    updateImage();
     imageMode(CENTER);
-    flower.resize(singleCellWidth, 0 );
-    image( flower, cx, cy );
-  }//end function 
+    try {
+
+      flower.resize(singleCellWidth, 0 );
+      image( flower, cx, cy );
+    }
+    catch(Exception e) {
+      text( e.getMessage(), cx,cy-12);
+    };
+
+    // fill( 255, 0, 0);
+    // text( " Live: " + isAlive + " (" + cellRow + ","  + cellColumn + ") N: " + liveNeighbours, cx-singleCellWidth / 3, cy );
+  }//end function
 }
