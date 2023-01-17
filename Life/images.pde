@@ -42,8 +42,8 @@ class ImageSelector {
 
     // We don't have images for all combinations of neighbours and life status, use defaults for those
 
-    deadDefault = new FlowerImage("dead.png");
-    aliveDefault = new FlowerImage("alive.png");
+    deadDefault = new FlowerImage("0.png");
+    aliveDefault = new FlowerImage("1.png");
     emptyHexagon = new FlowerImage("empty.png");
 
     
